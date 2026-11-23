@@ -31,3 +31,7 @@ coverage/
 
 # AI agent instructions
 CLAUDE.md
+
+# Accidentally committed npm cache (literal "~" dir from unexpanded home path)
+/~/
+.npm/
