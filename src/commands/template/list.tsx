@@ -11,6 +11,7 @@ import { requireAuth } from '../../lib/config.js';
 import { renderCommand, jsonError, stdoutWrite } from '../../lib/render.js';
 import { isJsonMode, isNonInteractive } from '../../lib/cli-flags.js';
 import { formatSelectLabel } from '../../lib/format-option-label.js';
+import { errorMessage } from '../../lib/errors.js';
 
 interface TemplateItem {
   id?: string;
@@ -63,7 +64,7 @@ function ListTemplatesCommand({ json: jsonProp, projectId, limit, search }: List
           setStep('selectTemplate');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to list templates');
+        setError(errorMessage(err, 'Failed to list templates'));
         setStep('error');
       }
     })();

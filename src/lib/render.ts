@@ -15,6 +15,7 @@ import * as fs from 'fs';
 import { isQuiet, isJsonMode } from './cli-flags.js';
 import { EXIT_USAGE_ERROR } from './exit-codes.js';
 import { verboseLog } from './verbose.js';
+import { formatJsonError, type ErrorInfo } from './errors.js';
 
 export function renderCommand(element: ReactElement): Instance {
   const shouldRedirect = isQuiet() || isJsonMode();
@@ -38,13 +39,15 @@ export function stdoutWrite(data: string): void {
 }
 
 /**
- * Write a structured JSON error to stderr.
+ * Write a structured JSON error to stderr:
+ * `{"error": message, "code": ..., "hint"?: ...}`.
  * Call this from error-exit effects when JSON mode is active
- * so agents can parse failures programmatically.
+ * so agents can parse failures programmatically. `code` and `hint`
+ * are inferred when not given (see lib/errors.ts).
  */
-export function jsonError(message: string): void {
+export function jsonError(message: string, info?: Partial<ErrorInfo>): void {
   if (isJsonMode()) {
-    process.stderr.write(JSON.stringify({ error: message }) + '\n');
+    process.stderr.write(formatJsonError(message, info) + '\n');
   }
 }
 

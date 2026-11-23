@@ -18,6 +18,7 @@ import { openBrowser } from '../lib/browser.js';
 import { sanitizeName } from '../lib/format-option-label.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { errorMessage } from '../lib/errors.js';
 
 interface TemplateData {
   id?: string;
@@ -129,7 +130,7 @@ export function TemplateActions({
           return;
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Action failed');
+        setError(errorMessage(err, 'Action failed'));
         setStep('error');
       }
     })();

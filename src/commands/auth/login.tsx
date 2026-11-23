@@ -28,6 +28,7 @@ import {
 import { startAuthServer, type AuthServer } from '../../lib/auth-server.js';
 import { renderCommand, jsonError, stdoutWrite, setUsageError } from '../../lib/render.js';
 import { isNonInteractive, isJsonMode } from '../../lib/cli-flags.js';
+import { errorMessage } from '../../lib/errors.js';
 
 
 type Step =
@@ -150,7 +151,7 @@ function LoginCommand({
         server.close();
       } catch (err) {
         if (cancelled) return;
-        const msg = err instanceof Error ? err.message : 'Browser authentication failed';
+        const msg = errorMessage(err, 'Browser authentication failed');
         setError(msg);
         setStep('error');
       }
@@ -192,7 +193,7 @@ function LoginCommand({
         setStep('verified');
       })
       .catch((err) => {
-        const msg = err instanceof Error ? err.message : 'Verification failed';
+        const msg = errorMessage(err, 'Verification failed');
         if (msg.includes('401') || msg.includes('Unauthorized')) {
           setError('Invalid token. Please check your token and try again.');
         } else {

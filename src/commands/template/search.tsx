@@ -18,6 +18,7 @@ import { requireAuth } from '../../lib/config.js';
 import { renderCommand, jsonError, stdoutWrite } from '../../lib/render.js';
 import { isJsonMode, isNonInteractive } from '../../lib/cli-flags.js';
 import { formatSelectLabel } from '../../lib/format-option-label.js';
+import { errorMessage } from '../../lib/errors.js';
 
 interface TemplateItem {
   id?: string;
@@ -75,7 +76,7 @@ function SearchTemplatesCommand({
           setStep('selectTemplate');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Search failed');
+        setError(errorMessage(err, 'Search failed'));
         setStep('error');
       }
     })();

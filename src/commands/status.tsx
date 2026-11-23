@@ -14,6 +14,7 @@ import {
 import { renderCommand, jsonError, stdoutWrite } from '../lib/render.js';
 import { isJsonMode } from '../lib/cli-flags.js';
 import { verboseLog } from '../lib/verbose.js';
+import { errorMessage } from '../lib/errors.js';
 
 interface StatusResult {
   authenticated: boolean;
@@ -65,7 +66,7 @@ function StatusCommand({ json: jsonProp }: StatusCommandProps): React.ReactEleme
           statusResult.apiReachable = true;
         } catch (err) {
           statusResult.error =
-            err instanceof Error ? err.message : 'API request failed';
+            errorMessage(err, 'API request failed');
         }
       } else {
         // Try a basic fetch to see if the API is at least reachable

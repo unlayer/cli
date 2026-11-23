@@ -27,6 +27,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { errorMessage } from '../lib/errors.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -437,7 +438,7 @@ function InitCommand({
       setCompletedSteps((prev) => [...prev, 'created']);
       setStep('created');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create project');
+      setError(errorMessage(err, 'Failed to create project'));
       setStep('error');
     }
   }, [step, name, framework, template, useTypeScript]);
@@ -588,7 +589,7 @@ function InitCommand({
         setStep('done');
       })
       .catch((err) => {
-        setError(`Failed to connect: ${err instanceof Error ? err.message : 'API error'}`);
+        setError(errorMessage(err, 'API error', 'Failed to connect: '));
         setStep('error');
       });
   }, [step]);

@@ -10,6 +10,7 @@ import { isJsonMode } from '../lib/cli-flags.js';
 import { sanitizeName } from '../lib/format-option-label.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { errorMessage } from '../lib/errors.js';
 
 interface TemplateListItem {
   id?: string;
@@ -82,7 +83,7 @@ function PullCommand({
         setProgress({ current: 0, total: allTemplates.length });
         setStep('pulling');
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to list templates');
+        setError(errorMessage(err, 'Failed to list templates'));
         setStep('error');
       }
     })();
@@ -155,7 +156,7 @@ function PullCommand({
         setPulled(results);
         setStep('done');
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to pull templates');
+        setError(errorMessage(err, 'Failed to pull templates'));
         setStep('error');
       }
     })();

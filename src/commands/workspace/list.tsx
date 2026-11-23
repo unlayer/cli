@@ -12,6 +12,7 @@ import { isNonInteractive, isJsonMode } from '../../lib/cli-flags.js';
 import { formatSelectLabel } from '../../lib/format-option-label.js';
 import type { WorkspaceWithProjects, Project } from '../../lib/types.js';
 import { fetchWorkspacesWithProjects } from '../../lib/workspaces.js';
+import { errorMessage } from '../../lib/errors.js';
 
 type Step = 'loading' | 'selectWorkspace' | 'selectProject' | 'done' | 'cancelled' | 'error';
 
@@ -50,7 +51,7 @@ function ListWorkspacesCommand({ json: jsonProp }: ListWorkspacesCommandProps): 
         }
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to list workspaces');
+        setError(errorMessage(err, 'Failed to list workspaces'));
         setStep('error');
       });
   }, []);

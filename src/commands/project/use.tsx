@@ -18,6 +18,7 @@ import { isNonInteractive, isJsonMode } from '../../lib/cli-flags.js';
 import { formatSelectLabel } from '../../lib/format-option-label.js';
 import type { Project, WorkspaceWithProjects } from '../../lib/types.js';
 import { fetchWorkspacesWithProjects } from '../../lib/workspaces.js';
+import { errorMessage } from '../../lib/errors.js';
 
 type Step = 'loading' | 'selectWorkspace' | 'selectProject' | 'done' | 'cancelled' | 'error';
 
@@ -118,7 +119,7 @@ function UseProjectCommand({ projectIdArg, json: jsonProp }: UseProjectCommandPr
         }
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+        setError(errorMessage(err, 'Failed to fetch projects'));
         setStep('error');
       });
   }, [projectIdArg]);

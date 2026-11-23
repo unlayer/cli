@@ -16,6 +16,7 @@ import { createSdkClient } from '../../lib/sdk-client.js';
 import { renderCommand, jsonError, stdoutWrite } from '../../lib/render.js';
 import { isJsonMode } from '../../lib/cli-flags.js';
 import type { Workspace } from '../../lib/types.js';
+import { errorMessage } from '../../lib/errors.js';
 
 interface WhoamiCommandProps {
   json?: boolean;
@@ -42,7 +43,7 @@ function WhoamiCommand({ json: jsonProp }: WhoamiCommandProps): React.ReactEleme
         setLoading(false);
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to get account info');
+        setError(errorMessage(err, 'Failed to get account info'));
         setLoading(false);
       });
   }, []);

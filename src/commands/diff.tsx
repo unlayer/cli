@@ -10,6 +10,7 @@ import { isJsonMode } from '../lib/cli-flags.js';
 import { diffDesigns, type DesignDiffResult } from '../lib/design-diff.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { errorMessage } from '../lib/errors.js';
 
 type Step = 'loadLocal' | 'fetchRemote' | 'diffing' | 'display' | 'error';
 
@@ -143,9 +144,7 @@ function DiffCommand({
         setStep('display');
       })
       .catch((err) => {
-        setError(
-          `Failed to fetch remote template #${templateId}: ${err instanceof Error ? err.message : String(err)}`,
-        );
+        setError(errorMessage(err, String(err), `Failed to fetch remote template #${templateId}: `));
         setStep('error');
       });
   }, [step, templateId, localDesign, projectId, templateName]);

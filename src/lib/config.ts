@@ -1,6 +1,7 @@
 import Conf from 'conf';
 import { isJsonMode } from './cli-flags.js';
 import { EXIT_USAGE_ERROR } from './exit-codes.js';
+import { formatJsonError } from './errors.js';
 import { verboseLog } from './verbose.js';
 import { getProjectConfig } from './project-config.js';
 
@@ -314,7 +315,9 @@ export function requireAuth(): void {
   verboseLog('Checking authentication...');
   if (!isAuthenticated()) {
     if (isJsonMode()) {
-      process.stderr.write(JSON.stringify({ error: 'Not authenticated. Run `unlayer login` to get started.' }) + '\n');
+      process.stderr.write(
+        formatJsonError('Not authenticated. Run `unlayer login` to get started.', { code: 'AUTH_REQUIRED' }) + '\n',
+      );
     } else {
       process.stderr.write('\x1b[31m✗\x1b[0m Not authenticated. Run \x1b[36munlayer login\x1b[0m to get started.\n\n');
     }

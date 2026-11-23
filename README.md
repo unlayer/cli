@@ -131,7 +131,31 @@ unlayer diff ./templates/welcome-email-42.json --json 2>/dev/null
 
 - **stdout** — machine-readable data only (JSON, URLs). Safe to pipe and parse.
 - **stderr** — human-readable messages, spinners, and errors.
-- In `--json` mode, errors are written to stderr as `{"error": "..."}`.
+- In `--json` mode, errors are written to stderr as a single JSON line:
+
+  ```json
+  {"error": "Not authenticated. Run `unlayer login` to get started.", "code": "AUTH_REQUIRED", "hint": "Run `unlayer login` or set the UNLAYER_TOKEN environment variable."}
+  ```
+
+  | Field   | Description |
+  | ------- | ----------- |
+  | `error` | Human-readable message. Wording may change; don't match on it. |
+  | `code`  | Stable identifier to switch on (see below). Always present. |
+  | `hint`  | Suggested next step. Optional; omitted when there is nothing useful to suggest. |
+
+  | `code`          | Meaning |
+  | --------------- | ------- |
+  | `AUTH_REQUIRED` | No token, or the API rejected it (HTTP 401/403). |
+  | `INVALID_INPUT` | Bad arguments or flags, a missing argument in non-interactive mode, or the API rejected the request (HTTP 400/422). |
+  | `NOT_FOUND`     | The template, project, workspace or environment doesn't exist (HTTP 404, or an empty list). |
+  | `NETWORK`       | The API couldn't be reached or the request timed out. |
+  | `RATE_LIMITED`  | Too many requests (HTTP 429). Wait and retry. |
+  | `SERVER_ERROR`  | The API returned a 5xx error. Retry later. |
+  | `UNKNOWN`       | Anything else. |
+
+  New codes may be added in future releases, so treat unrecognised values like `UNKNOWN`.
+
+- **Exit codes:** `0` success, `1` runtime error, `2` usage error (bad input, missing arguments, not authenticated). Exit codes are independent of `code`, so use `code` to tell failures apart.
 
 ## Environment Variables
 

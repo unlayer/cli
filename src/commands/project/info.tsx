@@ -9,6 +9,7 @@ import { createSdkClient } from '../../lib/sdk-client.js';
 import { getProjectId, requireAuth } from '../../lib/config.js';
 import { renderCommand, jsonError, stdoutWrite } from '../../lib/render.js';
 import { isJsonMode } from '../../lib/cli-flags.js';
+import { errorMessage } from '../../lib/errors.js';
 
 interface ProjectData {
   id?: number | string;
@@ -71,7 +72,7 @@ function InfoProjectCommand({
         setLoading(false);
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to get project info');
+        setError(errorMessage(err, 'Failed to get project info'));
         setLoading(false);
       });
   }, [projectId]);

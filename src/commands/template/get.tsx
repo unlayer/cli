@@ -12,6 +12,7 @@ import { isNonInteractive, isJsonMode } from '../../lib/cli-flags.js';
 import { formatSelectLabel } from '../../lib/format-option-label.js';
 import * as fs from 'fs';
 import * as path from 'path';
+import { errorMessage } from '../../lib/errors.js';
 
 interface TemplateItem {
   id?: string;
@@ -90,7 +91,7 @@ function GetTemplateCommand({
         setStep('selectTemplate');
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to fetch templates');
+        setError(errorMessage(err, 'Failed to fetch templates'));
         setStep('error');
       });
   }, [step]);
@@ -108,7 +109,7 @@ function GetTemplateCommand({
         setStep('display');
       })
       .catch((err) => {
-        setError(err instanceof Error ? err.message : 'Failed to get template');
+        setError(errorMessage(err, 'Failed to get template'));
         setStep('error');
       });
   }, [step, templateId]);
